@@ -17,10 +17,10 @@ package com.essiembre.eclipse.rbe.model.tree;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
 import org.eclipse.jface.viewers.ViewerFilter;
 
@@ -42,7 +42,7 @@ public class KeyTree extends Model implements IKeyTreeVisitable {
     /** Caching of key tree items (key=ID; value=KeyTreeItem). **/
     private final Map<String, KeyTreeItem> keyItemsCache = new TreeMap<String, KeyTreeItem>();
     /** Items found at root level. */
-    private final Set<KeyTreeItem> rootKeyItems = new TreeSet<KeyTreeItem>();
+    private final Set<KeyTreeItem> rootKeyItems = new LinkedHashSet<KeyTreeItem>();
     /** Updater responsible for tree changes. */
     private KeyTreeUpdater updater;
     /** Bundle group used to build the tree. */

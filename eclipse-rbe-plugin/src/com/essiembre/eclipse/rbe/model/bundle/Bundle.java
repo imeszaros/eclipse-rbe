@@ -16,13 +16,13 @@
 package com.essiembre.eclipse.rbe.model.bundle;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
 import com.essiembre.eclipse.rbe.model.Model;
 
@@ -38,7 +38,7 @@ public class Bundle extends Model implements IBundleVisitable {
     /** Bundle locale. */
     private Locale locale;
     /** Bundle entries (key=key value=BundleEntry). */
-    private final Map<String, BundleEntry> entries = new HashMap<>();
+    private final Map<String, BundleEntry> entries = new LinkedHashMap<>();
     /** Bundle group (parent). */
     private BundleGroup bundleGroup;
     
@@ -213,9 +213,7 @@ public class Bundle extends Model implements IBundleVisitable {
      * @return resource bundle keys
      */
     public Set<String> getKeys() {
-        Set<String> keys = new TreeSet<String>();
-        keys.addAll(entries.keySet());
-        return keys;
+        return new LinkedHashSet<>(entries.keySet());
         //        return Collections.unmodifiableSet(keys);
     }
 

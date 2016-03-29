@@ -19,11 +19,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import com.essiembre.eclipse.rbe.model.Model;
 
@@ -38,7 +37,7 @@ public class BundleGroup extends Model implements IBundleVisitable {
     /** Bundles forming the group (key=Locale; value=Bundle). */
     private final Map<Locale, Bundle> bundles = new HashMap<>();
     
-    private final SortedSet<String> keys = new TreeSet<String>();
+    private final Set<String> keys = new LinkedHashSet<String>();
     
     /**
      * Constructor.
@@ -306,7 +305,7 @@ public class BundleGroup extends Model implements IBundleVisitable {
      * Gets all resource bundle keys.
      * @return <code>List</code> of resource bundle keys.
      */
-    public SortedSet<String> getKeys() {
+    public Set<String> getKeys() {
         return keys;
     }
 
