@@ -82,7 +82,15 @@ public class ResourceManager {
                 final Bundle bundle = (Bundle) event.receiver();
                 final SourceEditor editor = 
                         (SourceEditor) sourceEditors.get(bundle.getLocale());
-                String editorContent = PropertiesGenerator.generate(bundle);
+
+                String charset;
+                try {
+                    charset = editor.getFile().getCharset();
+                } catch (CoreException e) {
+                    charset = "ISO_8859_1";
+                }
+
+                String editorContent = PropertiesGenerator.generate(bundle, charset);
                 editor.setContent(editorContent);
             }
             public void select(DeltaEvent event) {

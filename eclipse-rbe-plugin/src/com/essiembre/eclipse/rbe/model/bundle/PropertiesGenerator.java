@@ -15,6 +15,8 @@
  */
 package com.essiembre.eclipse.rbe.model.bundle;
 
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetEncoder;
 import java.util.Iterator;
 
 import org.eclipse.core.runtime.Platform;
@@ -66,9 +68,10 @@ public final class PropertiesGenerator {
      * Generates a formatted string from a given <code>Bundle</code>.  The
      * returned string will conform to documented properties file structure.
      * @param bundle the bundle used to generate the string
+     * @param charset the character set of the string to generate
      * @return the generated string
      */
-    public static String generate(Bundle bundle) {
+    public static String generate(Bundle bundle, String charset) {
         String lineBreak = SYSTEM_LINE_SEP;
         int numOfLineBreaks = RBEPreferences.getGroupLineBreaks();
         StringBuffer text = new StringBuffer();
@@ -132,6 +135,9 @@ public final class PropertiesGenerator {
                 if (RBEPreferences.getConvertUnicodeToEncoded()) {
                     key = PropertiesGenerator.convertUnicodeToEncoded(key);
                     value = PropertiesGenerator.convertUnicodeToEncoded(value);
+                } else {
+                    key = PropertiesGenerator.convertMandatoryUnicodeToEncoded(key, charset);
+                    value = PropertiesGenerator.convertMandatoryUnicodeToEncoded(value, charset);
                 }
                 if (comment != null && comment.length() > 0) {
                     text.append(comment);
@@ -169,7 +175,28 @@ public final class PropertiesGenerator {
         }
         return outBuffer.toString();
     }
-    
+
+    public static String convertMandatoryUnicodeToEncoded(String str, String charset) {
+        int len = str.length();
+        StringBuffer outBuffer = new StringBuffer(len * 2);
+        CharsetEncoder encoder = Charset.forName(charset).newEncoder();
+
+        for (int x = 0; x < len; x++) {
+            char aChar = str.charAt(x);
+            if (!encoder.canEncode(aChar)) {
+                outBuffer.append('\\');
+                outBuffer.append('u');
+                outBuffer.append(toHex((aChar >> 12) & 0xF));
+                outBuffer.append(toHex((aChar >> 8) & 0xF));
+                outBuffer.append(toHex((aChar >> 4) & 0xF));
+                outBuffer.append(toHex(aChar & 0xF));
+            } else {
+                outBuffer.append(aChar);
+            }
+        }
+        return outBuffer.toString();
+    }
+
     /**
      * Converts a nibble to a hex character
      * @param nibble  the nibble to convert.
